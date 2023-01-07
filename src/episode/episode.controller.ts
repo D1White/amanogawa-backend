@@ -9,11 +9,11 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
 
-import { MediaService } from './media.service';
+import { EpisodeService } from './episode.service';
 
-@Controller('media')
-export class MediaController {
-  constructor(private readonly mediaService: MediaService) {}
+@Controller('episode')
+export class EpisodeController {
+  constructor(private readonly episodeService: EpisodeService) {}
 
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
@@ -31,6 +31,6 @@ export class MediaController {
   ) {
     console.log(file);
 
-    return this.mediaService.upload(file);
+    return this.episodeService.upload(file);
   }
 }

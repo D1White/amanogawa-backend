@@ -5,10 +5,10 @@ export type GenreDocument = Genre & Document;
 
 @Schema()
 export class Genre {
-  @Prop({ required: [true, 'password required'], unique: true, type: mongoose.SchemaTypes.String })
+  @Prop({ required: true, unique: true, type: mongoose.SchemaTypes.String })
   name: string;
 
-  @Prop({ required: [true, 'password required'], unique: true, type: mongoose.SchemaTypes.String })
+  @Prop({ required: true, unique: true, type: mongoose.SchemaTypes.String })
   slug: string;
 }
 

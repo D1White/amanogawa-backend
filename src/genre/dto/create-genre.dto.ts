@@ -1,4 +1,5 @@
-import { IsLowercase, IsString, MinLength } from 'class-validator';
+import { IsString, Matches, MinLength } from 'class-validator';
+import { SLUG_REGEX } from 'utils/constants';
 
 export class CreateGenreDto {
   @IsString()
@@ -9,6 +10,6 @@ export class CreateGenreDto {
 
   @IsString()
   @MinLength(3, { message: 'Minimum slug length 3 characters' })
-  @IsLowercase({ message: 'Slug should be lowercase' })
+  @Matches(SLUG_REGEX, { message: 'Incorrect slug' })
   slug: string;
 }

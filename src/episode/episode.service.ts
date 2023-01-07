@@ -3,7 +3,7 @@ import { Express } from 'express';
 import { transcodeSubtitle, transcodeVideo } from 'utils/ffmpeg';
 
 @Injectable()
-export class MediaService {
+export class EpisodeService {
   async upload(file: Express.Multer.File) {
     // transcodeSubtitle(file, 3);
     // transcodeVideo(file, 640, 360);
