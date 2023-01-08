@@ -1,36 +1,46 @@
 import {
+  Body,
   Controller,
+  Delete,
+  Get,
+  HttpCode,
   HttpStatus,
-  ParseFilePipeBuilder,
+  Param,
+  Patch,
   Post,
-  UploadedFile,
-  UseInterceptors,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { Express } from 'express';
+import { FindOneMongoParams } from 'utils/params';
 
+import { CreateEpisodeDto, UpdateEpisodeDto } from './dto';
 import { EpisodeService } from './episode.service';
 
 @Controller('episode')
 export class EpisodeController {
   constructor(private readonly episodeService: EpisodeService) {}
 
-  @Post('upload')
-  @UseInterceptors(FileInterceptor('file'))
-  upload(
-    @UploadedFile(
-      new ParseFilePipeBuilder()
-        .addFileTypeValidator({
-          fileType: 'video/x-matroska',
-        })
-        .build({
-          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-        }),
-    )
-    file: Express.Multer.File,
-  ) {
-    console.log(file);
+  @Get()
+  findAll() {
+    return this.episodeService.findAll();
+  }
 
-    return this.episodeService.upload(file);
+  @Get(':id')
+  findOne(@Param() { id }: FindOneMongoParams) {
+    return this.episodeService.findOne(id);
+  }
+
+  @Post()
+  create(@Body() createEpisodeDto: CreateEpisodeDto) {
+    return this.episodeService.create(createEpisodeDto);
+  }
+
+  @Patch(':id')
+  update(@Param() { id }: FindOneMongoParams, @Body() updateEpisodeDto: UpdateEpisodeDto) {
+    return this.episodeService.update(id, updateEpisodeDto);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  remove(@Param() { id }: FindOneMongoParams) {
+    return this.episodeService.remove(id);
   }
 }

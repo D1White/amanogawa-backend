@@ -1,26 +1,27 @@
-import { IsNumber, IsOptional, IsString, IsUrl } from 'class-validator';
-
+import { IsNumber, IsOptional, IsString, IsUrl, Min, MinLength } from 'class-validator';
 export class CreateEpisodeDto {
+  @IsString()
+  @MinLength(3, { message: 'Minimum episode name length 3 characters' })
+  name: string;
+
   @IsNumber()
+  @Min(1, { message: 'Incorrect order' })
   order: number;
 
   @IsOptional()
-  @IsNumber()
-  name: string;
-
   @IsString()
+  @MinLength(2, { message: 'Minimum episode custom name length 2 characters' })
+  custom_name: string;
+
   @IsUrl()
   hight: string;
 
-  @IsString()
   @IsUrl()
   medium: string;
 
-  @IsString()
   @IsUrl()
   low: string;
 
-  @IsString()
   @IsUrl()
   subtitles: string;
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -13,8 +13,19 @@ export class AnimeService {
     return this.animeModel.find().exec();
   }
 
+  async findOne(id: string) {
+    const anime = await this.animeModel.findById(id).exec();
+
+    if (!anime) {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    }
+
+    return anime;
+  }
+
   async create(createAnimeDto: CreateAnimeDto) {
-    const createdAnime = new this.animeModel(createAnimeDto);
+    const newAnime = { created_at: new Date().toISOString(), ...createAnimeDto };
+    const createdAnime = new this.animeModel(newAnime);
     return createdAnime.save();
   }
 

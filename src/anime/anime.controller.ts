@@ -23,6 +23,11 @@ export class AnimeController {
     return this.animeService.findAll();
   }
 
+  @Get(':id')
+  findOne(@Param() { id }: FindOneMongoParams) {
+    return this.animeService.findOne(id);
+  }
+
   @Post()
   create(@Body() createAnimeDto: CreateAnimeDto) {
     return this.animeService.create(createAnimeDto);

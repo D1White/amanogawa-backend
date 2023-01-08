@@ -63,6 +63,9 @@ export class Anime {
 
   @Prop({ type: mongoose.SchemaTypes.ObjectId, ref: 'Group' })
   group: string;
+
+  @Prop({ required: true, type: mongoose.SchemaTypes.String })
+  created_at: string;
 }
 
 export const AnimeSchema = SchemaFactory.createForClass(Anime);
