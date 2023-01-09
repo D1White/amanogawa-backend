@@ -25,7 +25,12 @@ export class AnimeController {
 
   @Get(':id')
   findOne(@Param() { id }: FindOneMongoParams) {
-    return this.animeService.findOne(id);
+    return this.animeService.findOne(id, false);
+  }
+
+  @Get(':id/full')
+  findOneFull(@Param() { id }: FindOneMongoParams) {
+    return this.animeService.findOne(id, true);
   }
 
   @Post()

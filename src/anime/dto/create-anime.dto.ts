@@ -7,8 +7,9 @@ import {
   IsOptional,
   IsString,
   IsUrl,
-  Length,
   Matches,
+  Max,
+  Min,
   MinLength,
 } from 'class-validator';
 import { SLUG_REGEX } from 'utils/constants';
@@ -53,7 +54,8 @@ export class CreateAnimeDto {
   synopsis: string;
 
   @IsNumber()
-  @Length(4, 4)
+  @Min(1900)
+  @Max(3000)
   year: number;
 
   @IsString()
@@ -68,6 +70,7 @@ export class CreateAnimeDto {
   @ArrayNotEmpty()
   genres: string[];
 
+  @IsOptional()
   @IsArray()
   @ArrayNotEmpty()
   episodes: string[];

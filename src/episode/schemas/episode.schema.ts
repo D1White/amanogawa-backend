@@ -11,7 +11,7 @@ export class Episode {
   @Prop({ required: true, type: mongoose.SchemaTypes.Number })
   order: number;
 
-  @Prop({ required: true, type: mongoose.SchemaTypes.String })
+  @Prop({ type: mongoose.SchemaTypes.String })
   custom_name: string;
 
   @Prop({ required: true, type: mongoose.SchemaTypes.String })

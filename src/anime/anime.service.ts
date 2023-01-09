@@ -13,14 +13,20 @@ export class AnimeService {
     return this.animeModel.find().exec();
   }
 
-  async findOne(id: string) {
-    const anime = await this.animeModel.findById(id).exec();
+  async findOne(id: string, full: boolean) {
+    const anime = await this.animeModel
+      .findById(id)
+      .populate(full ? 'genres episodes' : '')
+      .exec();
 
     if (!anime) {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
 
-    return anime;
+    return this.animeModel
+      .findByIdAndUpdate(id, { views: anime.views + 1 }, { new: true })
+      .populate(full ? 'genres episodes' : '')
+      .exec();
   }
 
   async create(createAnimeDto: CreateAnimeDto) {
