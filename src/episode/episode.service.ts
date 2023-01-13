@@ -1,13 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { Anime, AnimeDocument } from 'anime/schemas/anime.schema';
 import { Model } from 'mongoose';
 
-import { CreateEpisodeDto, UpdateEpisodeDto } from './dto';
+import { AnimeEpisodeDto, CreateEpisodeDto, UpdateEpisodeDto } from './dto';
 import { Episode, EpisodeDocument } from './schemas/episode.schema';
 
 @Injectable()
 export class EpisodeService {
-  constructor(@InjectModel(Episode.name) public episodeModel: Model<EpisodeDocument>) {}
+  constructor(
+    @InjectModel(Episode.name) public episodeModel: Model<EpisodeDocument>,
+    @InjectModel(Anime.name) public animeModel: Model<AnimeDocument>,
+  ) {}
 
   async findAll() {
     return this.episodeModel.find().exec();
@@ -36,5 +40,31 @@ export class EpisodeService {
 
   async remove(id: string) {
     return this.episodeModel.findByIdAndDelete(id);
+  }
+
+  async addToAnime(animeEpisodeDto: AnimeEpisodeDto) {
+    const { anime_id, episode_id } = animeEpisodeDto;
+
+    const anime = await this.animeModel.findById(anime_id).exec();
+    if (!anime) {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    }
+
+    const animeHasEpisode = anime.episodes.some((episode) => episode.toString() === episode_id);
+    if (animeHasEpisode) {
+      throw new HttpException('This episode has already been added', HttpStatus.BAD_REQUEST);
+    }
+
+    return this.animeModel
+      .findByIdAndUpdate(anime_id, { $push: { episodes: episode_id } }, { new: true })
+      .exec();
+  }
+
+  async removeFromAnime(animeEpisodeDto: AnimeEpisodeDto) {
+    const { anime_id, episode_id } = animeEpisodeDto;
+
+    return this.animeModel
+      .findByIdAndUpdate(anime_id, { $pull: { episodes: episode_id } }, { new: true })
+      .exec();
   }
 }

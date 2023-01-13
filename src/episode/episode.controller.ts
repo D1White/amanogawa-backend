@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { FindOneMongoParams } from 'utils/params';
 
-import { CreateEpisodeDto, UpdateEpisodeDto } from './dto';
+import { AnimeEpisodeDto, CreateEpisodeDto, UpdateEpisodeDto } from './dto';
 import { EpisodeService } from './episode.service';
 
 @Controller('episode')
@@ -42,5 +42,15 @@ export class EpisodeController {
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param() { id }: FindOneMongoParams) {
     return this.episodeService.remove(id);
+  }
+
+  @Post('/add')
+  addToAnime(@Body() animeEpisodeDto: AnimeEpisodeDto) {
+    return this.episodeService.addToAnime(animeEpisodeDto);
+  }
+
+  @Post('/remove')
+  removeFromAnime(@Body() animeEpisodeDto: AnimeEpisodeDto) {
+    return this.episodeService.removeFromAnime(animeEpisodeDto);
   }
 }

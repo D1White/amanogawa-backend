@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Document, ObjectId } from 'mongoose';
 
 import { AnimeSeason, AnimeStatus, AnimeType } from '../types';
 
@@ -56,13 +56,13 @@ export class Anime {
   myanime_id: number;
 
   @Prop({ required: true, type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Genre' }] })
-  genres: string;
+  genres: ObjectId[];
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Episode' }] })
-  episodes: string;
+  episodes: ObjectId[];
 
   @Prop({ type: mongoose.SchemaTypes.ObjectId, ref: 'Group' })
-  group: string;
+  group: ObjectId;
 
   @Prop({ required: true, type: mongoose.SchemaTypes.String })
   created_at: string;
