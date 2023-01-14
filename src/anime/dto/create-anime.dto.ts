@@ -16,6 +16,9 @@ import { SLUG_REGEX } from 'utils/constants';
 
 import { AnimeSeason, AnimeStatus, AnimeType } from '../types';
 
+export const minAnimeYear = 1900;
+export const maxAnimeYear = 3000;
+
 export class CreateAnimeDto {
   @IsString()
   @MinLength(2)
@@ -54,8 +57,8 @@ export class CreateAnimeDto {
   synopsis: string;
 
   @IsNumber()
-  @Min(1900)
-  @Max(3000)
+  @Min(minAnimeYear)
+  @Max(maxAnimeYear)
   year: number;
 
   @IsString()

@@ -14,7 +14,13 @@ import { GroupModule } from './group/group.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MongooseModule.forRoot(process.env.MONGODB_URL),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async () => ({
+        uri: process.env.MONGODB_URL,
+        ignoreUndefined: true,
+      }),
+    }),
     EpisodeModule,
     GenreModule,
     GroupModule,

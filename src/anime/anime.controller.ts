@@ -8,19 +8,20 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { FindOneMongoParams } from 'utils/params';
 
 import { AnimeService } from './anime.service';
-import { CreateAnimeDto, UpdateAnimeDto } from './dto';
+import { AnimeFilter, CreateAnimeDto, UpdateAnimeDto } from './dto';
 
 @Controller('anime')
 export class AnimeController {
   constructor(private readonly animeService: AnimeService) {}
 
   @Get()
-  findAll() {
-    return this.animeService.findAll();
+  findAll(@Query() filter: AnimeFilter) {
+    return this.animeService.findAll(filter);
   }
 
   @Get(':id')

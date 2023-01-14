@@ -19,3 +19,13 @@ export enum AnimeSeason {
   summer = 'summer',
   autumn = 'autumn',
 }
+
+export enum AnimeSortField {
+  views = 'views',
+  createdAt = 'created_at',
+}
+
+export enum SortDirection {
+  ASC = 'ASC',
+  DESC = 'DESC',
+}
