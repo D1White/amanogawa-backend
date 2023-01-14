@@ -2,12 +2,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { AnimeModule } from './anime/anime.module';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { EpisodeModule } from './episode/episode.module';
-import { GenreModule } from './genre/genre.module';
-import { GroupModule } from './group/group.module';
+import { AnimeModule } from './api/anime/anime.module';
+import { EpisodeModule } from './api/episode/episode.module';
+import { GenreModule } from './api/genre/genre.module';
+import { GroupModule } from './api/group/group.module';
 
 @Module({
   imports: [
@@ -26,7 +24,5 @@ import { GroupModule } from './group/group.module';
     GroupModule,
     AnimeModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Anime, AnimeSchema } from 'anime/schemas/anime.schema';
+import { Anime, AnimeSchema, Episode, EpisodeSchema } from 'schemas';
 
 import { EpisodeController } from './episode.controller';
 import { EpisodeService } from './episode.service';
-import { Episode, EpisodeSchema } from './schemas/episode.schema';
 
 @Module({
   imports: [

@@ -1,10 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Anime, AnimeDocument } from 'anime/schemas/anime.schema';
 import { Model } from 'mongoose';
+import { Anime, AnimeDocument, Episode, EpisodeDocument } from 'schemas';
 
 import { AnimeEpisodeDto, CreateEpisodeDto, UpdateEpisodeDto } from './dto';
-import { Episode, EpisodeDocument } from './schemas/episode.schema';
 
 @Injectable()
 export class EpisodeService {

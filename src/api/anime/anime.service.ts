@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Anime, AnimeDocument } from 'schemas/anime.schema';
 
 import { AnimeFilter, CreateAnimeDto, UpdateAnimeDto } from './dto';
-import { Anime, AnimeDocument } from './schemas/anime.schema';
 import { SortDirection } from './types';
 
 @Injectable()

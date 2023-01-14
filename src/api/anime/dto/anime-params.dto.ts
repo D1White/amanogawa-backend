@@ -1,5 +1,11 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { AnimeSeason, AnimeSortField, AnimeStatus, AnimeType, SortDirection } from 'anime/types';
+import {
+  AnimeSeason,
+  AnimeSortField,
+  AnimeStatus,
+  AnimeType,
+  SortDirection,
+} from 'api/anime/types';
 import { Type } from 'class-transformer';
 import { IsArray, IsEnum, IsInt, IsString, Max, Min } from 'class-validator';
 import { DEFAULT_LIMIT } from 'utils/constants';

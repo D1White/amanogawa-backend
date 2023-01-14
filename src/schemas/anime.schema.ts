@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { AnimeSeason, AnimeStatus, AnimeType } from 'api/anime/types';
 import mongoose, { Document, ObjectId } from 'mongoose';
-
-import { AnimeSeason, AnimeStatus, AnimeType } from '../types';
 
 export type AnimeDocument = Anime & Document;
 
