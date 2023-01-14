@@ -37,6 +37,9 @@ class AnimeParams {
   genres: string[];
 
   @IsString()
+  group: string;
+
+  @IsString()
   search: string;
 
   @IsEnum(AnimeSortField)

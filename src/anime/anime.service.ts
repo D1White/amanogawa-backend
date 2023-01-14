@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -42,9 +42,23 @@ export class AnimeService {
         match: filter?.genres?.length > 0 ? { slug: { $in: filter?.genres } } : {},
         select: 'name slug',
       })
+      .populate({
+        path: 'group',
+        match: filter?.group ? { name: filter.group } : {},
+        select: '-__v',
+      })
       .exec();
 
-    const filtredAnime = anime.filter((item) => item.genres.length > 0);
+    const filtredAnime = anime.filter((item) => {
+      if (item.genres.length > 0) {
+        if (filter?.group) {
+          return !!item?.group;
+        } else {
+          return true;
+        }
+      }
+      return false;
+    });
 
     return {
       items: filtredAnime,
@@ -56,17 +70,8 @@ export class AnimeService {
   }
 
   async findOne(id: string, full: boolean) {
-    const anime = await this.animeModel
-      .findById(id)
-      .populate(full ? 'genres episodes' : '')
-      .exec();
-
-    if (!anime) {
-      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
-    }
-
     return this.animeModel
-      .findByIdAndUpdate(id, { views: anime.views + 1 }, { new: true })
+      .findByIdAndUpdate(id, { $inc: { views: 1 } }, { new: true })
       .populate(full ? 'genres episodes' : '')
       .exec();
   }
