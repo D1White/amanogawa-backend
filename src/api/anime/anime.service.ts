@@ -1,67 +1,57 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Anime, AnimeDocument } from 'schemas/anime.schema';
+import { Anime, AnimeDocument, Genre, GenreDocument } from 'schemas/index';
 
 import { AnimeFilter, CreateAnimeDto, UpdateAnimeDto } from './dto';
 import { SortDirection } from './types';
 
 @Injectable()
 export class AnimeService {
-  constructor(@InjectModel(Anime.name) public animeModel: Model<AnimeDocument>) {}
+  constructor(
+    @InjectModel(Anime.name) public animeModel: Model<AnimeDocument>,
+    @InjectModel(Genre.name) public genreModel: Model<GenreDocument>,
+  ) {}
 
   async findAll(filter: AnimeFilter) {
     const searchRegex = new RegExp(filter?.search, 'i');
+    let genresIds: string[] = [];
 
-    const count = await this.animeModel.count();
+    if (filter?.genres?.length > 0) {
+      const genres = await this.genreModel.find({ slug: { $in: filter.genres } }).exec();
+
+      if (genres) {
+        genresIds = genres.map((genre) => genre._id);
+      }
+    }
+
+    const query = {
+      $or: [
+        { title: searchRegex },
+        { title_english: searchRegex },
+        { title_japanese: searchRegex },
+      ],
+      type: filter?.type,
+      status: filter?.status,
+      season: filter?.season,
+      year: filter?.year,
+      genres: genresIds.length > 0 ? { $in: genresIds } : undefined,
+    };
+
+    const count = await this.animeModel.count(query);
 
     const anime = await this.animeModel
-      .find(
-        {
-          $or: [
-            { title: searchRegex },
-            { title_english: searchRegex },
-            { title_japanese: searchRegex },
-          ],
-          type: filter?.type,
-          status: filter?.status,
-          season: filter?.season,
-          year: filter?.year,
+      .find(query, '-__v', {
+        skip: filter.skip,
+        limit: filter.limit,
+        sort: {
+          [filter?.sort_field]: filter.sort_direction === SortDirection.ASC ? 1 : -1,
         },
-        '-__v',
-        {
-          skip: filter.skip,
-          limit: filter.limit,
-          sort: {
-            [filter?.sort_field]: filter.sort_direction === SortDirection.ASC ? 1 : -1,
-          },
-        },
-      )
-      .populate({
-        path: 'genres',
-        match: filter?.genres?.length > 0 ? { slug: { $in: filter?.genres } } : {},
-        select: 'name slug',
-      })
-      .populate({
-        path: 'group',
-        match: filter?.group ? { name: filter.group } : {},
-        select: '-__v',
       })
       .exec();
 
-    const filtredAnime = anime.filter((item) => {
-      if (item.genres.length > 0) {
-        if (filter?.group) {
-          return !!item?.group;
-        } else {
-          return true;
-        }
-      }
-      return false;
-    });
-
     return {
-      items: filtredAnime,
+      items: anime,
       total: count,
       limit: filter.limit,
       pages: Math.ceil(count / filter.limit),
