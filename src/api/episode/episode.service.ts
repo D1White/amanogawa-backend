@@ -27,9 +27,7 @@ export class EpisodeService {
   }
 
   async create(createEpisodeDto: CreateEpisodeDto) {
-    const newEpisode = { created_at: new Date().toISOString(), ...createEpisodeDto };
-
-    const createdEpisode = new this.episodeModel(newEpisode);
+    const createdEpisode = new this.episodeModel(createEpisodeDto);
     return createdEpisode.save();
   }
 

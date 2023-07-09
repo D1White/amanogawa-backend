@@ -4,21 +4,23 @@ export class CreateEpisodeDto {
   @MinLength(3, { message: 'Minimum episode name length 3 characters' })
   name: string;
 
-  @IsNumber()
-  @Min(1, { message: 'Incorrect order' })
-  order: number;
-
   @IsOptional()
   @IsString()
   @MinLength(2, { message: 'Minimum episode custom name length 2 characters' })
   custom_name: string;
 
+  @IsNumber()
+  @Min(0, { message: 'Incorrect order' })
+  order: number;
+
   @IsUrl()
   hight: string;
 
+  @IsOptional()
   @IsUrl()
   medium: string;
 
+  @IsOptional()
   @IsUrl()
   low: string;
 
