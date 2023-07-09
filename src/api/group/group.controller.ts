@@ -10,7 +10,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from 'utils/auth.guard';
+import { AdminAuthGuard } from 'guards/admin-auth.guard';
 import { FindOneMongoParams } from 'utils/params';
 
 import { CreateGroupDto, UpdateGroupDto } from './dto';
@@ -25,19 +25,19 @@ export class GroupController {
     return this.groupService.findAll();
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminAuthGuard)
   @Post()
   create(@Body() createGroupDto: CreateGroupDto) {
     return this.groupService.create(createGroupDto);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminAuthGuard)
   @Patch(':id')
   update(@Param() { id }: FindOneMongoParams, @Body() updateGroupDto: UpdateGroupDto) {
     return this.groupService.update(id, updateGroupDto);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminAuthGuard)
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param() { id }: FindOneMongoParams) {

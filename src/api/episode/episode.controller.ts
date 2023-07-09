@@ -10,7 +10,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from 'utils/auth.guard';
+import { AdminAuthGuard } from 'guards/admin-auth.guard';
 import { FindOneMongoParams } from 'utils/params';
 
 import { AnimeEpisodeDto, CreateEpisodeDto, UpdateEpisodeDto } from './dto';
@@ -20,44 +20,44 @@ import { EpisodeService } from './episode.service';
 export class EpisodeController {
   constructor(private readonly episodeService: EpisodeService) {}
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminAuthGuard)
   @Get()
   findAll() {
     return this.episodeService.findAll();
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminAuthGuard)
   @Get(':id')
   findOne(@Param() { id }: FindOneMongoParams) {
     return this.episodeService.findOne(id);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminAuthGuard)
   @Post()
   create(@Body() createEpisodeDto: CreateEpisodeDto) {
     return this.episodeService.create(createEpisodeDto);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminAuthGuard)
   @Patch(':id')
   update(@Param() { id }: FindOneMongoParams, @Body() updateEpisodeDto: UpdateEpisodeDto) {
     return this.episodeService.update(id, updateEpisodeDto);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminAuthGuard)
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param() { id }: FindOneMongoParams) {
     return this.episodeService.remove(id);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminAuthGuard)
   @Post('/add')
   addToAnime(@Body() animeEpisodeDto: AnimeEpisodeDto) {
     return this.episodeService.addToAnime(animeEpisodeDto);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminAuthGuard)
   @Post('/remove')
   removeFromAnime(@Body() animeEpisodeDto: AnimeEpisodeDto) {
     return this.episodeService.removeFromAnime(animeEpisodeDto);

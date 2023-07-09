@@ -11,7 +11,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from 'utils/auth.guard';
+import { AdminAuthGuard } from 'guards/admin-auth.guard';
 import { FindOneMongoParams } from 'utils/params';
 
 import { AnimeService } from './anime.service';
@@ -36,19 +36,19 @@ export class AnimeController {
     return this.animeService.findOne(id, true);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminAuthGuard)
   @Post()
   create(@Body() createAnimeDto: CreateAnimeDto) {
     return this.animeService.create(createAnimeDto);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminAuthGuard)
   @Patch(':id')
   update(@Param() { id }: FindOneMongoParams, @Body() updateAnimeDto: UpdateAnimeDto) {
     return this.animeService.update(id, updateAnimeDto);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminAuthGuard)
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param() { id }: FindOneMongoParams) {
