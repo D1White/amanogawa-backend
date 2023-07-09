@@ -8,9 +8,7 @@ import {
 } from 'api/anime/types';
 import { Type } from 'class-transformer';
 import { IsArray, IsEnum, IsInt, IsString, Max, Min } from 'class-validator';
-import { DEFAULT_LIMIT } from 'utils/constants';
-
-import { maxAnimeYear, minAnimeYear } from './create-anime.dto';
+import { DEFAULT_LIMIT, MAX_ANIME_YEAR, MIN_ANIME_YEAR } from 'utils/constants';
 
 class AnimeParams {
   @IsInt()
@@ -33,17 +31,14 @@ class AnimeParams {
   season: AnimeSeason;
 
   @IsInt()
-  @Min(minAnimeYear)
-  @Max(maxAnimeYear)
+  @Min(MIN_ANIME_YEAR)
+  @Max(MAX_ANIME_YEAR)
   @Type(() => Number)
   year: number;
 
   @IsArray()
   @IsString({ each: true })
   genres: string[];
-
-  @IsString()
-  group: string;
 
   @IsString()
   search: string;

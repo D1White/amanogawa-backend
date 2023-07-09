@@ -36,6 +36,11 @@ export class AnimeController {
     return this.animeService.findOne(id, true);
   }
 
+  @Get('group/:name')
+  findByGroup(@Param() { name }: { name: string }) {
+    return this.animeService.findByGroup(name);
+  }
+
   @UseGuards(AdminAuthGuard)
   @Post()
   create(@Body() createAnimeDto: CreateAnimeDto) {

@@ -5,7 +5,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AnimeModule } from './api/anime/anime.module';
 import { EpisodeModule } from './api/episode/episode.module';
 import { GenreModule } from './api/genre/genre.module';
-import { GroupModule } from './api/group/group.module';
 
 @Module({
   imports: [
@@ -21,7 +20,6 @@ import { GroupModule } from './api/group/group.module';
     }),
     EpisodeModule,
     GenreModule,
-    GroupModule,
     AnimeModule,
   ],
 })

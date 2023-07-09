@@ -66,9 +66,22 @@ export class AnimeService {
       .exec();
   }
 
+  async findByGroup(groupName: string) {
+    return this.animeModel
+      .find({ group: groupName }, [
+        'title',
+        'slug',
+        'year',
+        'season',
+        'group',
+        'name_in_group',
+        'created_at',
+      ])
+      .exec();
+  }
+
   async create(createAnimeDto: CreateAnimeDto) {
-    const newAnime = { created_at: new Date().toISOString(), ...createAnimeDto };
-    const createdAnime = new this.animeModel(newAnime);
+    const createdAnime = new this.animeModel(createAnimeDto);
     return createdAnime.save();
   }
 

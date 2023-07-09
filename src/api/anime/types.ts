@@ -8,7 +8,7 @@ export enum AnimeType {
 }
 
 export enum AnimeStatus {
-  airing = 'airing',
+  ongoing = 'ongoing',
   complete = 'complete',
   upcoming = 'upcoming',
 }

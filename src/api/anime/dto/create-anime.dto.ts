@@ -12,12 +12,9 @@ import {
   Min,
   MinLength,
 } from 'class-validator';
-import { SLUG_REGEX } from 'utils/constants';
+import { MAX_ANIME_YEAR, MIN_ANIME_YEAR, SLUG_REGEX } from 'utils/constants';
 
 import { AnimeSeason, AnimeStatus, AnimeType } from '../types';
-
-export const minAnimeYear = 1900;
-export const maxAnimeYear = 3000;
 
 export class CreateAnimeDto {
   @IsString()
@@ -42,6 +39,10 @@ export class CreateAnimeDto {
   image: string;
 
   @IsString()
+  @MinLength(5)
+  synopsis: string;
+
+  @IsString()
   @IsEnum(AnimeType)
   type: AnimeType;
 
@@ -49,16 +50,14 @@ export class CreateAnimeDto {
   @IsEnum(AnimeStatus)
   status: AnimeStatus;
 
-  @IsNumber()
-  views: number;
-
-  @IsString()
-  @MinLength(5)
-  synopsis: string;
+  @IsArray()
+  @IsMongoId({ each: true })
+  @ArrayNotEmpty()
+  genres: string[];
 
   @IsNumber()
-  @Min(minAnimeYear)
-  @Max(maxAnimeYear)
+  @Min(MIN_ANIME_YEAR)
+  @Max(MAX_ANIME_YEAR)
   year: number;
 
   @IsString()
@@ -66,19 +65,30 @@ export class CreateAnimeDto {
   season: AnimeSeason;
 
   @IsOptional()
-  @IsNumber()
-  myanime_id: number;
+  @IsString()
+  @MinLength(2)
+  group: string;
 
-  @IsArray()
-  @ArrayNotEmpty()
-  genres: string[];
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
+  name_in_group: string;
 
   @IsOptional()
   @IsArray()
+  @IsMongoId({ each: true })
   @ArrayNotEmpty()
   episodes: string[];
 
   @IsOptional()
-  @IsMongoId()
-  group: string;
+  @IsNumber()
+  myanime_id: number;
+
+  @IsOptional()
+  @IsNumber()
+  score: number;
+
+  @IsOptional()
+  @IsNumber()
+  views: number;
 }
