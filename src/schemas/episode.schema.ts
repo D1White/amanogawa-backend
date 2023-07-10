@@ -3,7 +3,7 @@ import mongoose, { Document } from 'mongoose';
 
 export type EpisodeDocument = Episode & Document & { created_at: Date };
 
-@Schema({ timestamps: { createdAt: 'created_at' } })
+@Schema({ timestamps: { createdAt: 'created_at', updatedAt: false } })
 export class Episode {
   @Prop({ required: true, type: mongoose.SchemaTypes.String })
   name: string;

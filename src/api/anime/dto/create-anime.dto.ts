@@ -75,6 +75,11 @@ export class CreateAnimeDto {
   name_in_group: string;
 
   @IsOptional()
+  @IsString()
+  @MinLength(1)
+  episodes_total: string;
+
+  @IsOptional()
   @IsArray()
   @IsMongoId({ each: true })
   @ArrayNotEmpty()

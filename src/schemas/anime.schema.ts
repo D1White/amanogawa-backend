@@ -57,6 +57,9 @@ export class Anime {
   @Prop({ type: mongoose.SchemaTypes.String })
   name_in_group: string;
 
+  @Prop({ type: mongoose.SchemaTypes.String })
+  episodes_total: string;
+
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Episode' }] })
   episodes: ObjectId[];
 
