@@ -61,7 +61,7 @@ export class AnimeService {
 
   async findOne(id: string, full: boolean) {
     return this.animeModel
-      .findByIdAndUpdate(id, { $inc: { views: 1 } }, { new: true })
+      .findByIdAndUpdate(id, { $inc: { views: full ? 1 : 0 } }, { new: true })
       .populate(full ? 'genres episodes' : '')
       .exec();
   }
