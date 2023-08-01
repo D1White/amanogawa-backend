@@ -1,7 +1,7 @@
 {
   "singleQuote": true,
   "trailingComma": "all",
-  "endOfLine": "lf",
+  "endOfLine": "auto",
   "tabWidth": 2,
   "useTabs": false,
   "semi": true,
