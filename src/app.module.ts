@@ -6,6 +6,7 @@ import { AnimeModule } from './api/anime/anime.module';
 import { AuthModule } from './api/auth/auth.module';
 import { EpisodeModule } from './api/episode/episode.module';
 import { GenreModule } from './api/genre/genre.module';
+import { RatingModule } from './api/rating/rating.module';
 import { UserModule } from './api/user/user.module';
 
 @Module({
@@ -25,6 +26,7 @@ import { UserModule } from './api/user/user.module';
     AnimeModule,
     UserModule,
     AuthModule,
+    RatingModule,
   ],
 })
 export class AppModule {}

@@ -67,9 +67,6 @@ export class Anime {
   myanime_id: number;
 
   @Prop({ type: mongoose.SchemaTypes.Number, default: 0 })
-  score: number;
-
-  @Prop({ type: mongoose.SchemaTypes.Number, default: 0 })
   views: number;
 }
 

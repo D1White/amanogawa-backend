@@ -91,9 +91,5 @@ export class CreateAnimeDto {
 
   @IsOptional()
   @IsNumber()
-  score: number;
-
-  @IsOptional()
-  @IsNumber()
   views: number;
 }

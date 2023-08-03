@@ -23,13 +23,13 @@ export class UserController {
 
   @Post('/favorites/add')
   @UseGuards(AccessTokenGuard)
-  addAnimeToFavorites(@Param('id') id: string, @Body() favoritesDto: FavoritesDto) {
+  addAnimeToFavorites(@UserId() id: string, @Body() favoritesDto: FavoritesDto) {
     return this.userService.addAnimeToFavorites(id, favoritesDto.anime_id);
   }
 
   @Post('/favorites/remove')
   @UseGuards(AccessTokenGuard)
-  removeAnimeFromFavorites(@Param('id') id: string, @Body() favoritesDto: FavoritesDto) {
+  removeAnimeFromFavorites(@UserId() id: string, @Body() favoritesDto: FavoritesDto) {
     return this.userService.removeAnimeFromFavorites(id, favoritesDto.anime_id);
   }
 }

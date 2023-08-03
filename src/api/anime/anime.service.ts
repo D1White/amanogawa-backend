@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Anime, AnimeDocument, Genre, GenreDocument } from 'schemas/index';
+import { Anime, AnimeDocument, Genre, GenreDocument, Rating, RatingDocument } from 'schemas/index';
 
 import { AnimeFilter, CreateAnimeDto, UpdateAnimeDto } from './dto';
 import { SortDirection } from './types';
@@ -11,6 +11,7 @@ export class AnimeService {
   constructor(
     @InjectModel(Anime.name) public animeModel: Model<AnimeDocument>,
     @InjectModel(Genre.name) public genreModel: Model<GenreDocument>,
+    @InjectModel(Rating.name) public ratingModel: Model<RatingDocument>,
   ) {}
 
   async findAll(filter: AnimeFilter) {
@@ -40,18 +41,33 @@ export class AnimeService {
 
     const count = await this.animeModel.count(query);
 
-    const anime = await this.animeModel
-      .find(query, '-__v', {
-        skip: filter.skip,
-        limit: filter.limit,
-        sort: {
-          [filter?.sort_field]: filter.sort_direction === SortDirection.ASC ? 1 : -1,
+    const animeWithRating = await this.animeModel
+      .aggregate([
+        {
+          $match: query,
         },
-      })
+        {
+          $lookup: {
+            from: 'ratings',
+            localField: '_id',
+            foreignField: 'anime_id',
+            as: 'ratings',
+          },
+        },
+        {
+          $addFields: {
+            rating: { $avg: '$ratings.rating' },
+          },
+        },
+        { $unset: 'ratings' },
+      ])
+      .skip(filter.skip)
+      .limit(filter.limit)
+      .sort({ [filter?.sort_field]: filter.sort_direction === SortDirection.ASC ? 1 : -1 })
       .exec();
 
     return {
-      items: anime,
+      items: animeWithRating,
       total: count,
       limit: filter.limit,
       pages: Math.ceil(count / filter.limit),
@@ -60,10 +76,16 @@ export class AnimeService {
   }
 
   async findOne(id: string, full: boolean) {
-    return this.animeModel
+    const anime = await this.animeModel
       .findByIdAndUpdate(id, { $inc: { views: full ? 1 : 0 } }, { new: true })
       .populate(full ? 'genres episodes' : '')
       .exec();
+
+    const ratings = await this.ratingModel.find({ anime_id: anime._id }).exec();
+    const ratingSum = ratings.reduce((prev, curr) => prev + curr.rating, 0);
+    const ratingAvg = ratingSum / ratings.length;
+
+    return { ...anime.toJSON(), rating: ratingAvg };
   }
 
   async findByGroup(groupName: string) {
