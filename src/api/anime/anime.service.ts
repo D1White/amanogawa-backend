@@ -35,7 +35,13 @@ export class AnimeService {
       type: filter?.type,
       status: filter?.status,
       season: filter?.season,
-      year: filter?.year,
+      year:
+        filter?.min_year || filter?.max_year
+          ? {
+              ...(filter?.min_year && { $gte: filter?.min_year }),
+              ...(filter?.max_year && { $lte: filter?.max_year }),
+            }
+          : undefined,
       genres: genresIds.length > 0 ? { $in: genresIds } : undefined,
     };
 

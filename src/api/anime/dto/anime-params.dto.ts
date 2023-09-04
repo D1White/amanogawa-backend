@@ -34,7 +34,13 @@ class AnimeParams {
   @Min(MIN_ANIME_YEAR)
   @Max(MAX_ANIME_YEAR)
   @Type(() => Number)
-  year: number;
+  min_year: number;
+
+  @IsInt()
+  @Min(MIN_ANIME_YEAR)
+  @Max(MAX_ANIME_YEAR)
+  @Type(() => Number)
+  max_year: number;
 
   @IsArray()
   @IsString({ each: true })
@@ -44,7 +50,7 @@ class AnimeParams {
   search: string;
 
   @IsEnum(AnimeSortField)
-  sort_field: AnimeSortField;
+  sort_field = AnimeSortField.createdAt;
 
   @IsEnum(SortDirection)
   sort_direction = SortDirection.DESC;

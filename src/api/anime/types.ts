@@ -23,6 +23,7 @@ export enum AnimeSeason {
 export enum AnimeSortField {
   views = 'views',
   createdAt = 'created_at',
+  rating = 'rating',
 }
 
 export enum SortDirection {
