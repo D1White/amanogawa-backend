@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { isObjectIdOrHexString, Model } from 'mongoose';
 import { Anime, AnimeDocument, Genre, GenreDocument, Rating, RatingDocument } from 'schemas/index';
 
 import { AnimeFilter, CreateAnimeDto, UpdateAnimeDto } from './dto';
@@ -82,10 +82,16 @@ export class AnimeService {
   }
 
   async findOne(id: string, full: boolean) {
+    const query = isObjectIdOrHexString(id) && id.length === 24 ? { _id: id } : { slug: id };
+
     const anime = await this.animeModel
-      .findByIdAndUpdate(id, { $inc: { views: full ? 1 : 0 } }, { new: true })
+      .findOneAndUpdate(query, { $inc: { views: full ? 1 : 0 } }, { new: true })
       .populate(full ? 'genres episodes' : '')
       .exec();
+
+    if (!anime) {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    }
 
     const ratings = await this.ratingModel.find({ anime_id: anime._id }).exec();
     const ratingSum = ratings.reduce((prev, curr) => prev + curr.rating, 0);
