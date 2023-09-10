@@ -4,7 +4,7 @@ import { isObjectIdOrHexString, Model } from 'mongoose';
 import { Anime, AnimeDocument, Genre, GenreDocument, Rating, RatingDocument } from 'schemas/index';
 
 import { AnimeFilter, CreateAnimeDto, UpdateAnimeDto } from './dto';
-import { SortDirection } from './types';
+import { AnimeSortField, SortDirection } from './types';
 
 @Injectable()
 export class AnimeService {
@@ -111,6 +111,7 @@ export class AnimeService {
         'name_in_group',
         'created_at',
       ])
+      .sort({ [AnimeSortField.createdAt]: 1 })
       .exec();
   }
 
