@@ -30,4 +30,8 @@ export class CreateEpisodeDto {
   @IsOptional()
   @IsUrl()
   subtitles_full: string;
+
+  @IsOptional()
+  @IsUrl()
+  thumbnail: string;
 }

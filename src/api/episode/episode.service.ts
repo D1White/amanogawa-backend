@@ -13,7 +13,7 @@ export class EpisodeService {
   ) {}
 
   async findAll() {
-    return this.episodeModel.find().exec();
+    return this.episodeModel.find().sort({ order: 1 }).exec();
   }
 
   async findOne(id: string) {

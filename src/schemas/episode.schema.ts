@@ -28,6 +28,9 @@ export class Episode {
 
   @Prop({ type: mongoose.SchemaTypes.String })
   subtitles_full: string;
+
+  @Prop({ type: mongoose.SchemaTypes.String })
+  thumbnail: string;
 }
 
 export const EpisodeSchema = SchemaFactory.createForClass(Episode);
