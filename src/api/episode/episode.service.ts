@@ -24,7 +24,7 @@ export class EpisodeService {
     }
 
     const anime = await this.animeModel
-      .findOne({ episodes: { $in: id } }, ['title', 'slug', 'episodes', 'created_at'])
+      .findOne({ episodes: { $in: id } }, ['title', 'slug', 'synopsis', 'episodes', 'created_at'])
       .populate('episodes')
       .exec();
 

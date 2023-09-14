@@ -26,7 +26,6 @@ export class EpisodeController {
     return this.episodeService.findAll();
   }
 
-  @UseGuards(AdminAuthGuard)
   @Get(':id')
   findOne(@Param() { id }: FindOneMongoParams) {
     return this.episodeService.findOne(id);
