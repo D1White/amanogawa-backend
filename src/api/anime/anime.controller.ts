@@ -26,6 +26,11 @@ export class AnimeController {
     return this.animeService.findAll(filter);
   }
 
+  @Get('years')
+  years() {
+    return this.animeService.years();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.animeService.findOne(id, false);

@@ -127,4 +127,22 @@ export class AnimeService {
   async remove(id: string) {
     return this.animeModel.findByIdAndDelete(id);
   }
+
+  async years() {
+    const years = await this.animeModel.aggregate([
+      {
+        $group: {
+          _id: null,
+          max_year: { $max: '$year' },
+          min_year: { $min: '$year' },
+        },
+      },
+    ]);
+
+    if (!years || !years?.[0]) {
+      throw new HttpException('Internal Server Error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    return years[0];
+  }
 }
