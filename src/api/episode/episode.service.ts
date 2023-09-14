@@ -23,7 +23,12 @@ export class EpisodeService {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
 
-    return episode;
+    const anime = await this.animeModel
+      .findOne({ episodes: { $in: id } }, ['title', 'slug', 'episodes', 'created_at'])
+      .populate('episodes')
+      .exec();
+
+    return { ...episode.toJSON(), anime };
   }
 
   async create(createEpisodeDto: CreateEpisodeDto) {
