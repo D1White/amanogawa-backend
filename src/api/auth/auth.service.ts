@@ -12,6 +12,8 @@ import { UserService } from 'api/user/user.service';
 import { compare } from 'bcrypt';
 import { SecureUser, UserDocument } from 'schemas/user.schema';
 
+import { AuthTokens } from './types';
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -72,7 +74,7 @@ export class AuthService {
     return tokens;
   }
 
-  async getTokens(id: string, username: string) {
+  async getTokens(id: string, username: string): Promise<AuthTokens> {
     const [access_token, refresh_token] = await Promise.all([
       this.jwtService.signAsync(
         {

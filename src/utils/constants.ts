@@ -9,3 +9,4 @@ export const MIN_ANIME_RATING = 1;
 export const MAX_ANIME_RATING = 10;
 
 export const REFRESH_TOKEN_COOKIE = 'refresh-token';
+export const ACCESS_TOKEN_COOKIE = 'access-token';

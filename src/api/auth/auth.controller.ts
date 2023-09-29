@@ -13,6 +13,7 @@ import { CreateUserDto } from 'api/user/dto/create-user.dto';
 import { Cookies, UserId } from 'decorators';
 import { Response } from 'express';
 import { AccessTokenGuard, LocalAuthGuard, RefreshTokenGuard } from 'guards';
+import { clearAuthCookies, setAuthCookies } from 'utils';
 import { REFRESH_TOKEN_COOKIE } from 'utils/constants';
 
 import { AuthService } from './auth.service';
@@ -25,14 +26,14 @@ export class AuthController {
   @Post('login')
   async login(@Request() req, @Res({ passthrough: true }) res: Response) {
     const tokens = await this.authService.login(req.user);
-    res.cookie(REFRESH_TOKEN_COOKIE, tokens.refresh_token, { httpOnly: true });
+    setAuthCookies(tokens, res);
     return tokens;
   }
 
   @Post('register')
   async register(@Body() dto: CreateUserDto, @Res({ passthrough: true }) res: Response) {
     const tokens = await this.authService.register(dto);
-    res.cookie(REFRESH_TOKEN_COOKIE, tokens.refresh_token, { httpOnly: true });
+    setAuthCookies(tokens, res);
     return tokens;
   }
 
@@ -41,7 +42,7 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async logout(@UserId() id: string, @Res({ passthrough: true }) res: Response) {
     await this.authService.logout(id);
-    res.clearCookie(REFRESH_TOKEN_COOKIE);
+    clearAuthCookies(res);
   }
 
   @Get('refresh')
@@ -52,7 +53,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const tokens = await this.authService.refresh(id, refreshToken);
-    res.cookie(REFRESH_TOKEN_COOKIE, tokens.refresh_token, { httpOnly: true });
+    setAuthCookies(tokens, res);
     return tokens;
   }
 }
