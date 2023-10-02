@@ -28,6 +28,10 @@ export class UserService {
     return this.userModel.findOne({ email }).exec();
   }
 
+  async findByUsername(username: string) {
+    return this.userModel.findOne({ username }).exec();
+  }
+
   async update(id: string, updateUserDto: UpdateUserDto) {
     const hashPassword = updateUserDto?.password ? await hash(updateUserDto.password, 7) : '';
 

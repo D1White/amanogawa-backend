@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
   Request,
   Res,
@@ -55,5 +56,15 @@ export class AuthController {
     const tokens = await this.authService.refresh(id, refreshToken);
     setAuthCookies(tokens, res);
     return tokens;
+  }
+
+  @Get('username/:username')
+  async validateUsername(@Param('username') username: string) {
+    return this.authService.validateUsername(username);
+  }
+
+  @Get('email/:email')
+  async validateEmail(@Param('email') email: string) {
+    return this.authService.validateEmail(email);
   }
 }

@@ -103,4 +103,14 @@ export class AuthService {
       refresh_token,
     };
   }
+
+  async validateUsername(username: string) {
+    const user = await this.userService.findByUsername(username);
+    return !user;
+  }
+
+  async validateEmail(email: string) {
+    const user = await this.userService.findByEmail(email);
+    return !user;
+  }
 }
