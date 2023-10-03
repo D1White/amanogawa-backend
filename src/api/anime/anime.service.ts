@@ -65,8 +65,8 @@ export class AnimeService {
         },
         {
           $addFields: {
-            avg: { $avg: '$ratings.rating' },
-            count: { $size: '$ratings' },
+            ratingAvg: { $avg: '$ratings.rating' },
+            rating_count: { $size: '$ratings' },
           },
         },
         {
@@ -75,8 +75,13 @@ export class AnimeService {
               $round: [
                 {
                   $add: [
-                    { $multiply: [WEIGHTED_AVERAGE_COEFFICIENT, '$avg'] },
-                    { $multiply: [1 - WEIGHTED_AVERAGE_COEFFICIENT, { $log: ['$count', 10] }] },
+                    { $multiply: [WEIGHTED_AVERAGE_COEFFICIENT, '$ratingAvg'] },
+                    {
+                      $multiply: [
+                        1 - WEIGHTED_AVERAGE_COEFFICIENT,
+                        { $log: ['$rating_count', 10] },
+                      ],
+                    },
                   ],
                 },
                 2,
@@ -84,7 +89,7 @@ export class AnimeService {
             },
           },
         },
-        { $unset: ['ratings', 'avg', 'count'] },
+        { $unset: ['ratings', 'ratingAvg'] },
       ])
       .exec();
 
@@ -116,7 +121,11 @@ export class AnimeService {
       WEIGHTED_AVERAGE_COEFFICIENT * ratingAvg +
       (1 - WEIGHTED_AVERAGE_COEFFICIENT) * Math.log10(ratings.length);
 
-    return { ...anime.toJSON(), rating: +ratingWeightedAvg.toFixed(2) };
+    return {
+      ...anime.toJSON(),
+      rating: +ratingWeightedAvg.toFixed(2),
+      rating_count: ratings.length,
+    };
   }
 
   async findByGroup(groupName: string) {
