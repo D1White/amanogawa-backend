@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { isObjectIdOrHexString, Model } from 'mongoose';
 import { Anime, AnimeDocument, Genre, GenreDocument, Rating, RatingDocument } from 'schemas/index';
+import { WEIGHTED_AVERAGE_COEFFICIENT } from 'utils';
 
 import { AnimeFilter, CreateAnimeDto, UpdateAnimeDto } from './dto';
 import { AnimeSortField, SortDirection } from './types';
@@ -49,9 +50,11 @@ export class AnimeService {
 
     const animeWithRating = await this.animeModel
       .aggregate([
-        {
-          $match: query,
-        },
+        { $match: query },
+        { $skip: filter.skip },
+        { $limit: filter.limit },
+        { $sort: { [filter?.sort_field]: filter.sort_direction === SortDirection.ASC ? 1 : -1 } },
+        // Weighted average
         {
           $lookup: {
             from: 'ratings',
@@ -62,14 +65,27 @@ export class AnimeService {
         },
         {
           $addFields: {
-            rating: { $avg: '$ratings.rating' },
+            avg: { $avg: '$ratings.rating' },
+            count: { $size: '$ratings' },
           },
         },
-        { $unset: 'ratings' },
+        {
+          $addFields: {
+            rating: {
+              $round: [
+                {
+                  $add: [
+                    { $multiply: [WEIGHTED_AVERAGE_COEFFICIENT, '$avg'] },
+                    { $multiply: [1 - WEIGHTED_AVERAGE_COEFFICIENT, { $log: ['$count', 10] }] },
+                  ],
+                },
+                2,
+              ],
+            },
+          },
+        },
+        { $unset: ['ratings', 'avg', 'count'] },
       ])
-      .skip(filter.skip)
-      .limit(filter.limit)
-      .sort({ [filter?.sort_field]: filter.sort_direction === SortDirection.ASC ? 1 : -1 })
       .exec();
 
     return {
@@ -77,7 +93,7 @@ export class AnimeService {
       total: count,
       limit: filter.limit,
       pages: Math.ceil(count / filter.limit),
-      page: filter.skip / filter.limit + 1,
+      page: Math.floor(filter.skip / filter.limit) + 1,
     };
   }
 
@@ -96,8 +112,11 @@ export class AnimeService {
     const ratings = await this.ratingModel.find({ anime_id: anime._id }).exec();
     const ratingSum = ratings.reduce((prev, curr) => prev + curr.rating, 0);
     const ratingAvg = ratingSum / ratings.length;
+    const ratingWeightedAvg =
+      WEIGHTED_AVERAGE_COEFFICIENT * ratingAvg +
+      (1 - WEIGHTED_AVERAGE_COEFFICIENT) * Math.log10(ratings.length);
 
-    return { ...anime.toJSON(), rating: ratingAvg };
+    return { ...anime.toJSON(), rating: +ratingWeightedAvg.toFixed(2) };
   }
 
   async findByGroup(groupName: string) {

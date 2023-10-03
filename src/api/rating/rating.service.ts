@@ -17,16 +17,11 @@ export class RatingService {
     return await this.ratingModel.findOne({ user_id: userId, anime_id: animeId }).exec();
   }
 
-  async create(userId: string, createRatingDto: CreateRatingDto) {
-    const createdRating = new this.ratingModel({ user_id: userId, ...createRatingDto });
-    return createdRating.save();
-  }
-
-  async update(userId: string, animeId: string, updateRatingDto: UpdateRatingDto) {
+  async createOrUpdate(userId: string, createRatingDto: CreateRatingDto) {
     return await this.ratingModel.findOneAndUpdate(
-      { user_id: userId, anime_id: animeId },
-      updateRatingDto,
-      { new: true },
+      { user_id: userId, anime_id: createRatingDto.anime_id },
+      { user_id: userId, ...createRatingDto },
+      { new: true, upsert: true },
     );
   }
 }

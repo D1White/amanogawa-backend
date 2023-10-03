@@ -24,16 +24,6 @@ export class RatingController {
   @Post()
   @UseGuards(AccessTokenGuard)
   create(@UserId() id: string, @Body() createRatingDto: CreateRatingDto) {
-    return this.ratingService.create(id, createRatingDto);
-  }
-
-  @Patch(':id')
-  @UseGuards(AccessTokenGuard)
-  update(
-    @Param() { id: animeId }: FindOneMongoParams,
-    @UserId() userId: string,
-    @Body() updateRatingDto: UpdateRatingDto,
-  ) {
-    return this.ratingService.update(userId, animeId, updateRatingDto);
+    return this.ratingService.createOrUpdate(id, createRatingDto);
   }
 }
