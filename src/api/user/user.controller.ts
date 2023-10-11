@@ -12,13 +12,19 @@ export class UserController {
   @Get()
   @UseGuards(AccessTokenGuard)
   getMe(@UserId() id: string) {
-    return this.userService.findById(id, true);
+    return this.userService.findById(id);
   }
 
   @Patch(':id')
   @UseGuards(AccessTokenGuard)
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(id, updateUserDto);
+  }
+
+  @Get('/favorites')
+  @UseGuards(AccessTokenGuard)
+  favorites(@UserId() id: string) {
+    return this.userService.getFavorites(id);
   }
 
   @Post('/favorites/add')

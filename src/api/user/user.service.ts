@@ -49,6 +49,11 @@ export class UserService {
     return await this.update(userId, { refresh_token: refreshToken });
   }
 
+  async getFavorites(id: string) {
+    const user = await this.findById(id, true);
+    return user?.favorites || [];
+  }
+
   async addAnimeToFavorites(userId: string, animeId: string) {
     return this.userModel
       .findByIdAndUpdate(userId, { $addToSet: { favorites: animeId } }, { new: true })
