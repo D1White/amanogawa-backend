@@ -55,18 +55,10 @@ export class UserService {
   }
 
   async addAnimeToFavorites(userId: string, animeId: string) {
-    return this.userModel
-      .findByIdAndUpdate(userId, { $addToSet: { favorites: animeId } }, { new: true })
-      .select(['username', 'favorites'])
-      .populate('favorites')
-      .exec();
+    this.userModel.findByIdAndUpdate(userId, { $addToSet: { favorites: animeId } }).exec();
   }
 
   async removeAnimeFromFavorites(userId: string, animeId: string) {
-    return this.userModel
-      .findByIdAndUpdate(userId, { $pull: { favorites: animeId } }, { new: true })
-      .select(['username', 'favorites'])
-      .populate('favorites')
-      .exec();
+    this.userModel.findByIdAndUpdate(userId, { $pull: { favorites: animeId } }).exec();
   }
 }

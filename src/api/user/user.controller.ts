@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { UserId } from 'decorators/user-id.decorator';
 import { AccessTokenGuard } from 'guards';
 
@@ -29,13 +39,15 @@ export class UserController {
 
   @Post('/favorites/add')
   @UseGuards(AccessTokenGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
   addAnimeToFavorites(@UserId() id: string, @Body() favoritesDto: FavoritesDto) {
-    return this.userService.addAnimeToFavorites(id, favoritesDto.anime_id);
+    this.userService.addAnimeToFavorites(id, favoritesDto.anime_id);
   }
 
   @Post('/favorites/remove')
   @UseGuards(AccessTokenGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
   removeAnimeFromFavorites(@UserId() id: string, @Body() favoritesDto: FavoritesDto) {
-    return this.userService.removeAnimeFromFavorites(id, favoritesDto.anime_id);
+    this.userService.removeAnimeFromFavorites(id, favoritesDto.anime_id);
   }
 }
