@@ -2,10 +2,10 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, ObjectId, SchemaTypes } from 'mongoose';
 
 export type SecureUserDocument = Omit<UserDocument, 'password'>;
-export type UserDocument = User & Document;
+export type UserDocument = User & Document & { created_at: Date; updated_at: Date };
 export type SecureUser = Omit<User, 'password'>;
 
-@Schema()
+@Schema({ timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } })
 export class User {
   @Prop({ required: true, type: SchemaTypes.String, unique: true })
   username: string;
