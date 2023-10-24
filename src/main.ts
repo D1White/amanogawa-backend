@@ -13,7 +13,7 @@ async function bootstrap() {
   app.useGlobalFilters(new MongoExceptionFilter());
 
   app.enableCors({
-    origin: [process.env.FRONTEND_ORIGIN],
+    origin: [process.env.FRONTEND_ORIGIN, 'http://localhost:3000'],
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     credentials: true,
   });
