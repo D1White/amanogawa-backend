@@ -6,7 +6,7 @@ import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from './constants';
 const cookiesOptions: CookieOptions = {
   sameSite: 'none',
   secure: true,
-  domain: 'http://localhost:3000',
+  domain: process.env.FRONTEND_ORIGIN,
 };
 
 export const setAuthCookies = (tokens: AuthTokens, res: Response) => {
