@@ -6,7 +6,7 @@ import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from './constants';
 const cookiesOptions: CookieOptions = {
   sameSite: 'none',
   secure: true,
-  domain: process.env.FRONTEND_ORIGIN,
+  domain: 'amanogawa-frontend.vercel.app',
 };
 
 export const setAuthCookies = (tokens: AuthTokens, res: Response) => {
