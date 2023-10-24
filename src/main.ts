@@ -12,11 +12,11 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.useGlobalFilters(new MongoExceptionFilter());
 
-  app.enableCors({
-    origin: [process.env.FRONTEND_ORIGIN, 'http://localhost:3000'],
-    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-    credentials: true,
-  });
+  // app.enableCors({
+  //   origin: [process.env.FRONTEND_ORIGIN],
+  //   methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+  //   credentials: true,
+  // });
 
   await app.listen(process.env.PORT);
 }
