@@ -3,7 +3,11 @@ import { CookieOptions, Response } from 'express';
 
 import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from './constants';
 
-const cookiesOptions: CookieOptions = { sameSite: 'none', secure: true };
+const cookiesOptions: CookieOptions = {
+  sameSite: 'none',
+  secure: true,
+  domain: 'http://localhost:3000',
+};
 
 export const setAuthCookies = (tokens: AuthTokens, res: Response) => {
   res.cookie(REFRESH_TOKEN_COOKIE, tokens.refresh_token, {
