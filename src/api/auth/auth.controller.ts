@@ -38,7 +38,7 @@ export class AuthController {
     return this.authService.logout(id);
   }
 
-  @Get('refresh')
+  @Post('refresh')
   @UseGuards(RefreshTokenGuard)
   async refresh(@UserId() id: string, @Body() { refresh_token }: RefreshTokenDto) {
     return this.authService.refresh(id, refresh_token);
