@@ -53,9 +53,13 @@ export class AuthService {
 
   async login(user: UserDocument) {
     const tokens = await this.getTokens(user._id, user.username);
-    await this.userService.updateRefreshToken(user._id, tokens.refresh_token);
 
-    return tokens;
+    if (!!user?.refresh_token) {
+      return { ...tokens, refresh_token: user.refresh_token };
+    } else {
+      await this.userService.updateRefreshToken(user._id, tokens.refresh_token);
+      return tokens;
+    }
   }
 
   async logout(userId: string) {
@@ -66,6 +70,7 @@ export class AuthService {
     const user = await this.userService.findById(userId);
 
     if (!user || !user.refresh_token || refreshToken !== user?.refresh_token) {
+      this.userService.updateRefreshToken(userId, '');
       throw new ForbiddenException('Access Denied');
     }
 
