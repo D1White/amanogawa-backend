@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { hash } from 'bcrypt';
 import { Model } from 'mongoose';
@@ -32,26 +32,45 @@ export class UserService {
     return this.userModel.findOne({ username }).exec();
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async getPublicUser(username: string, withFavorites?: boolean) {
+    const user = await this.userModel
+      .findOne({ username })
+      .select(`username isPublic isFavoritesPublic ${withFavorites ? 'favorites' : ''}`)
+      .populate(withFavorites ? 'favorites' : '')
+      .exec();
+
+    if (!user?.isPublic) {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    }
+
+    return user;
+  }
+
+  async update(id: string, updateUserDto: UpdateUserDto, updatedAtSkip?: boolean) {
     const hashPassword = updateUserDto?.password ? await hash(updateUserDto.password, 7) : '';
 
     return this.userModel
       .findByIdAndUpdate(
         id,
         { ...updateUserDto, ...(hashPassword && { password: hashPassword }) },
-        { new: true },
+        { new: true, timestamps: !updatedAtSkip },
       )
       .select('-password')
       .exec();
   }
 
   async updateRefreshToken(userId: string, refreshToken: string) {
-    return await this.update(userId, { refresh_token: refreshToken });
+    return await this.update(userId, { refresh_token: refreshToken }, true);
   }
 
   async getFavorites(id: string) {
     const user = await this.findById(id, true);
     return user?.favorites || [];
+  }
+
+  async getPublicUserFavorites(username: string) {
+    const user = await this.getPublicUser(username, true);
+    return user?.isFavoritesPublic && user?.favorites ? user?.favorites : [];
   }
 
   async addAnimeToFavorites(userId: string, animeId: string) {

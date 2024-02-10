@@ -37,6 +37,16 @@ export class UserController {
     return this.userService.getFavorites(id);
   }
 
+  @Get('/favorites/:username')
+  publicUserFavorites(@Param('username') username: string) {
+    return this.userService.getPublicUserFavorites(username);
+  }
+
+  @Get(':username')
+  publicUser(@Param('username') username: string) {
+    return this.userService.getPublicUser(username);
+  }
+
   @Post('/favorites/add')
   @UseGuards(AccessTokenGuard)
   @HttpCode(HttpStatus.NO_CONTENT)

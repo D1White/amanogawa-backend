@@ -21,6 +21,12 @@ export class User {
 
   @Prop({ type: SchemaTypes.String, default: '' })
   refresh_token: string;
+
+  @Prop({ type: SchemaTypes.Boolean, default: true })
+  isPublic: boolean;
+
+  @Prop({ type: SchemaTypes.Boolean, default: true })
+  isFavoritesPublic: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
