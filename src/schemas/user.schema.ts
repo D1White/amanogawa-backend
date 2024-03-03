@@ -24,9 +24,6 @@ export class User {
 
   @Prop({ type: SchemaTypes.Boolean, default: true })
   isPublic: boolean;
-
-  @Prop({ type: SchemaTypes.Boolean, default: true })
-  isFavoritesPublic: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

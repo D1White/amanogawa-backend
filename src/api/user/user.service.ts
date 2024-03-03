@@ -35,7 +35,7 @@ export class UserService {
   async getPublicUser(username: string, withFavorites?: boolean) {
     const user = await this.userModel
       .findOne({ username })
-      .select(`username isPublic isFavoritesPublic ${withFavorites ? 'favorites' : ''}`)
+      .select(`username isPublic ${withFavorites ? 'favorites' : ''}`)
       .populate(withFavorites ? 'favorites' : '')
       .exec();
 
@@ -70,7 +70,7 @@ export class UserService {
 
   async getPublicUserFavorites(username: string) {
     const user = await this.getPublicUser(username, true);
-    return user?.isFavoritesPublic && user?.favorites ? user?.favorites : [];
+    return user?.isPublic && user?.favorites ? user?.favorites : [];
   }
 
   async addAnimeToFavorites(userId: string, animeId: string) {
