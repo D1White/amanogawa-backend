@@ -1,9 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { UserId } from 'decorators';
 import { AccessTokenGuard } from 'guards';
 import { FindOneMongoParams } from 'utils';
 
-import { CreateRatingDto, UpdateRatingDto } from './dto';
+import { CreateRatingDto } from './dto';
 import { RatingService } from './rating.service';
 
 @Controller('rating')

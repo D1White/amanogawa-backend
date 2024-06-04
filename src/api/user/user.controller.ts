@@ -12,7 +12,7 @@ import {
 import { UserId } from 'decorators/user-id.decorator';
 import { AccessTokenGuard } from 'guards';
 
-import { FavoritesDto, UpdateUserDto } from './dto';
+import { FavoritesDto, FollowDto, UpdateUserDto } from './dto';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -31,6 +31,8 @@ export class UserController {
     return this.userService.update(id, updateUserDto);
   }
 
+  // Favorites
+
   @Get('/favorites')
   @UseGuards(AccessTokenGuard)
   favorites(@UserId() id: string) {
@@ -40,11 +42,6 @@ export class UserController {
   @Get('/favorites/:username')
   publicUserFavorites(@Param('username') username: string) {
     return this.userService.getPublicUserFavorites(username);
-  }
-
-  @Get(':username')
-  publicUser(@Param('username') username: string) {
-    return this.userService.getPublicUser(username);
   }
 
   @Post('/favorites/add')
@@ -59,5 +56,38 @@ export class UserController {
   @HttpCode(HttpStatus.NO_CONTENT)
   removeAnimeFromFavorites(@UserId() id: string, @Body() favoritesDto: FavoritesDto) {
     this.userService.removeAnimeFromFavorites(id, favoritesDto.anime_id);
+  }
+
+  // Public user
+
+  @Get(':username')
+  publicUser(@Param('username') username: string) {
+    return this.userService.getPublicUser(username);
+  }
+
+  // Follow
+
+  @Get(':username/followers')
+  followers(@Param('username') username: string) {
+    return this.userService.getFollowers(username);
+  }
+
+  @Get(':username/followings')
+  followings(@Param('username') username: string) {
+    return this.userService.getFollowings(username);
+  }
+
+  @Post('/follow')
+  @UseGuards(AccessTokenGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  follow(@UserId() id: string, @Body() followDto: FollowDto) {
+    this.userService.follow(id, followDto.following);
+  }
+
+  @Post('/unfollow')
+  @UseGuards(AccessTokenGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  unfollow(@UserId() id: string, @Body() followDto: FollowDto) {
+    this.userService.unfollow(id, followDto.following);
   }
 }

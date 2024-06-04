@@ -2,13 +2,17 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { hash } from 'bcrypt';
 import { Model } from 'mongoose';
+import { Follow, FollowDocument } from 'schemas/follow.schema';
 import { User, UserDocument } from 'schemas/user.schema';
 
 import { CreateUserDto, UpdateUserDto } from './dto';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) public userModel: Model<UserDocument>) {}
+  constructor(
+    @InjectModel(User.name) public userModel: Model<UserDocument>,
+    @InjectModel(Follow.name) public followModel: Model<FollowDocument>,
+  ) {}
 
   async create(createUserDto: CreateUserDto) {
     const hashPassword = await hash(createUserDto.password, 7);
@@ -63,6 +67,8 @@ export class UserService {
     return await this.update(userId, { refresh_token: refreshToken }, true);
   }
 
+  // Favorites
+
   async getFavorites(id: string) {
     const user = await this.findById(id, true);
     return user?.favorites || [];
@@ -79,5 +85,47 @@ export class UserService {
 
   async removeAnimeFromFavorites(userId: string, animeId: string) {
     this.userModel.findByIdAndUpdate(userId, { $pull: { favorites: animeId } }).exec();
+  }
+
+  // Follow
+  async getFollowers(username: string) {
+    const user = await this.getPublicUser(username);
+
+    if (!user?.isPublic) {
+      return [];
+    }
+
+    const followers = await this.followModel.find({ following: user._id }).populate('user').exec();
+    const followersList = followers.map(({ user }) => ({
+      _id: (user as unknown as UserDocument)._id,
+      username: (user as unknown as UserDocument).username,
+    }));
+
+    return followersList;
+  }
+
+  async getFollowings(username: string) {
+    const user = await this.getPublicUser(username);
+
+    if (!user?.isPublic) {
+      return [];
+    }
+
+    const followings = await this.followModel.find({ user: user._id }).populate('following').exec();
+    const followingsList = followings.map(({ following }) => ({
+      _id: (following as unknown as UserDocument)._id,
+      username: (following as unknown as UserDocument).username,
+    }));
+
+    return followingsList;
+  }
+
+  async follow(id: string, following: string) {
+    const follow = new this.followModel({ user: id, following: following });
+    return follow.save();
+  }
+
+  async unfollow(id: string, following: string) {
+    await this.followModel.findOneAndDelete({ user: id, following });
   }
 }

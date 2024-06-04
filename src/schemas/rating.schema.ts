@@ -6,10 +6,10 @@ export type RatingDocument = Rating & Document;
 @Schema()
 export class Rating {
   @Prop({ required: true, type: SchemaTypes.ObjectId, ref: 'User' })
-  user_id: ObjectId[];
+  user_id: ObjectId;
 
   @Prop({ required: true, type: SchemaTypes.ObjectId, ref: 'Anime' })
-  anime_id: ObjectId[];
+  anime_id: ObjectId;
 
   @Prop({ required: true, type: mongoose.SchemaTypes.Number })
   rating: number;
