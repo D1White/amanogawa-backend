@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { AnimeModule } from './api/anime/anime.module';
 import { AuthModule } from './api/auth/auth.module';
+import { CommentModule } from './api/comment/comment.module';
 import { EpisodeModule } from './api/episode/episode.module';
 import { GenreModule } from './api/genre/genre.module';
 import { RatingModule } from './api/rating/rating.module';
@@ -29,6 +30,7 @@ import { UserModule } from './api/user/user.module';
     AuthModule,
     RatingModule,
     SearchModule,
+    CommentModule,
   ],
 })
 export class AppModule {}

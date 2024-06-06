@@ -95,13 +95,7 @@ export class UserService {
       return [];
     }
 
-    const followers = await this.followModel.find({ following: user._id }).populate('user').exec();
-    const followersList = followers.map(({ user }) => ({
-      _id: (user as unknown as UserDocument)._id,
-      username: (user as unknown as UserDocument).username,
-    }));
-
-    return followersList;
+    return this.followModel.find({ following: user._id }).populate('user', 'username').exec();
   }
 
   async getFollowings(username: string) {
@@ -111,13 +105,7 @@ export class UserService {
       return [];
     }
 
-    const followings = await this.followModel.find({ user: user._id }).populate('following').exec();
-    const followingsList = followings.map(({ following }) => ({
-      _id: (following as unknown as UserDocument)._id,
-      username: (following as unknown as UserDocument).username,
-    }));
-
-    return followingsList;
+    return this.followModel.find({ user: user._id }).populate('following', 'username').exec();
   }
 
   async follow(id: string, following: string) {
